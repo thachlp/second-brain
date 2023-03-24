@@ -1,2 +1,2 @@
 rootProject.name = 'java-libs'
-
+include 'apache-mina'
