@@ -1,5 +1,5 @@
 ext {
-    junit = '5.8.1'
+    junit = '5.9.2'
     assertj = '3.24.2'
     log4j = '2.20.0'
 }
