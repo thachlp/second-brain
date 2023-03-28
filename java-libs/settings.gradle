@@ -1,2 +1,3 @@
 rootProject.name = 'java-libs'
-
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+include 'apache-mina'

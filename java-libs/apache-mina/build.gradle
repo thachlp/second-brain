@@ -1,0 +1,7 @@
+dependencies {
+    implementation 'org.apache.sshd:sshd-core:2.9.2'
+    implementation 'net.i2p.crypto:eddsa:0.3.0'
+}
+application {
+    mainClass = 'peter.lee.server.SshdServer'
+}
