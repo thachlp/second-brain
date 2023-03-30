@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   build-project:
-    if: github.repository == 'apache/second-brain/java-libs'
+    if: github.repository == 'thachlp/second-brain/java-libs'
     runs-on: ubuntu-latest
     steps:
     - name: Checkout sources
