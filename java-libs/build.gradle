@@ -1,6 +1,8 @@
 plugins {
     id 'java'
     id 'application'
+    id 'org.springframework.boot' version '2.7.12'
+    id 'io.spring.dependency-management' version '1.1.0'
 }
 
 allprojects {
@@ -16,9 +18,19 @@ allprojects {
 subprojects {
     apply plugin: 'java'
     apply plugin: 'application'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
     apply from: "$rootDir/gradle/scripts/dependencies.gradle"
 
     test {
         useJUnitPlatform()
     }
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
 }
