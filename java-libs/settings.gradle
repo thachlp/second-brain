@@ -2,3 +2,5 @@ rootProject.name = 'java-libs'
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include 'apache-mina'
 include 'environment-variable'
+include 'spring-jpa'
+
