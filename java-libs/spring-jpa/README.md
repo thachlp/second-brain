@@ -102,5 +102,13 @@ interface ProductRepository extends Repository<Product, Long> {
     List<CertificateLog> findByPriceFrom(@Param("price") float price);
 }
 ```
-_Paging_  
-_Limiting result_
+_Paging, Sorting_  
+_Limiting result_  
+### Transaction  
+When a method annotated with `@Transactional` is invoked, a database transaction is automatically started before the method executes and committed after the method completes.
+**Configuration**
+- `Propagation`: REQUIRED, SUPPORTS, MANDATORY, REQUIRED_NEW, NOT_SUPPORTED, NEVER, NESTED
+- `Isolation`: DEFAULT, READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE
+- `Timeout(int)`
+- `readOnly` default is `false`
+- `rollbackFor` default on `RuntimeException` and `Error`
