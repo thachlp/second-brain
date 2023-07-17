@@ -103,6 +103,10 @@ interface ProductRepository extends Repository<Product, Long> {
 }
 ```
 _Paging, Sorting_  
+```java
+  final PageRequest pageRequest = PageRequest.of(pageSize, pageNumber, Sort.Direction.DESC, "id");
+  final Page<Category> categories = categoryRepository.findAll(pageRequest);
+```
 _Limiting result_  
 ### Transaction  
 When a method annotated with `@Transactional` is invoked, a database transaction is automatically started before the method executes and committed after the method completes.
