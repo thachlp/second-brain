@@ -14,29 +14,29 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@RestController("/categories")
 @RequiredArgsConstructor
 @Slf4j
 public class CategoryController {
     private final CategoryService categoryService;
 
-    @PostMapping("/categories")
+    @PostMapping()
     ResponseEntity<CommonDataResponse> newCategory(@RequestBody CategoryRequest categoryRequest) {
         return ResponseEntity.ok(categoryService.addCategory(categoryRequest));
     }
 
-    @GetMapping("/categories/{id}")
+    @GetMapping("/{id}")
     ResponseEntity<CommonDataResponse> getCategoryDetail(@PathVariable("id") Long categoryId) {
         return ResponseEntity.ok(categoryService.getCategoryDetail(categoryId));
     }
 
-    @PutMapping("/categories/{id}")
+    @PutMapping("/{id}")
     ResponseEntity<CommonDataResponse> updateCategory(@PathVariable("id") Long categoryId,
                                                       @RequestBody CategoryRequest categoryRequest) {
         return ResponseEntity.ok(categoryService.updateCategory(categoryId, categoryRequest));
     }
 
-    @DeleteMapping("/categories/{id}")
+    @DeleteMapping("/{id}")
     ResponseEntity<CommonDataResponse> deleteCategory(@PathVariable("id") Long categoryId) {
         return ResponseEntity.ok(categoryService.deleteCategory(categoryId));
     }
