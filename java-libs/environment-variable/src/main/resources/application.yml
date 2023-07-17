@@ -1,5 +1,0 @@
-environment:
-    home: ${HOME}
-    shell: ${SHELL}
-    user: ${USER}
-
