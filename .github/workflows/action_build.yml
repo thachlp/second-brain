@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   build-project:
-    if: github.repository == 'thachlp/second-brain/java-libs'
+    if: github.repository == 'thachlp/second-brain/projects'
     runs-on: ubuntu-latest
     steps:
     - name: Checkout sources
@@ -24,6 +24,6 @@ jobs:
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2
     - name: Gradle build
-      working-directory: java-libs
+      working-directory: projects
       run: ./gradlew build
      
