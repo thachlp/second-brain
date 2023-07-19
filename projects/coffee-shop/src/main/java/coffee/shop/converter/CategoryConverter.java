@@ -1,15 +1,13 @@
 package coffee.shop.converter;
 
+import coffee.shop.dto.CategoryDTO;
 import coffee.shop.entity.Category;
-import coffee.shop.model.response.CategoryResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import lombok.experimental.UtilityClass;
 
-@Component
-@RequiredArgsConstructor
+@UtilityClass
 public class CategoryConverter {
-    public CategoryResponse convert(Category category) {
-        return CategoryResponse.builder()
+    public static CategoryDTO convert(Category category) {
+        return CategoryDTO.builder()
                 .id(category.getId())
                 .name(category.getName())
                 .build();

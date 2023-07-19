@@ -2,10 +2,10 @@ package coffee.shop.service;
 
 import coffee.shop.constant.MessageConstants;
 import coffee.shop.converter.CategoryConverter;
+import coffee.shop.dto.CategoryDTO;
 import coffee.shop.entity.Category;
 import coffee.shop.model.exception.NotFoundException;
 import coffee.shop.model.request.CategoryRequest;
-import coffee.shop.model.response.CategoryResponse;
 import coffee.shop.model.response.CommonDataPageResponse;
 import coffee.shop.model.response.CommonDataResponse;
 import coffee.shop.repository.CategoryRepository;
@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CategoryService {
     private final CategoryRepository categoryRepository;
-    private final CategoryConverter categoryConverter;
 
     public CommonDataResponse addCategory(CategoryRequest categoryRequest) {
         final var name = categoryRequest.getName();
@@ -38,20 +37,20 @@ public class CategoryService {
         final var data = categoryRepository.save(category);
         return CommonDataResponse.builder()
                 .result(true)
-                .data(categoryConverter.convert(data))
+                .data(CategoryConverter.convert(data))
                 .build();
     }
 
-    public CommonDataPageResponse getCategories(Integer pageSize, Integer pageNumber) {
-        final PageRequest pageRequest = PageRequest.of(pageSize, pageNumber, Sort.Direction.DESC, "id");
-        final Page<Category> categories = categoryRepository.findAll(pageRequest);
-        final List<CategoryResponse> categoriesResponse = categories.get()
-                .map(categoryConverter::convert)
+    public CommonDataPageResponse getCategories(Integer pageNumber, Integer pageSize) {
+        final Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        final Page<Category> categories = categoryRepository.findAll(pageable);
+        final List<CategoryDTO> categoriesResponse = categories.get()
+                .map(CategoryConverter::convert)
                 .collect(Collectors.toList());
         return CommonDataPageResponse.builder()
                 .data(categoriesResponse)
-                .page(categories.getNumber())
-                .size(categories.getSize())
+                .pageSize(categories.getSize())
+                .pageNumber(categories.getNumber())
                 .totalPages(categories.getTotalPages())
                 .totalElements(categories.getTotalElements())
                 .build();
@@ -62,7 +61,7 @@ public class CategoryService {
                 .orElseThrow(() -> new NotFoundException(MessageConstants.CATEGORY_NOT_FOUND));
         return CommonDataResponse.builder()
                 .result(true)
-                .data(categoryConverter.convert(category))
+                .data(CategoryConverter.convert(category))
                 .build();
     }
 
@@ -76,7 +75,7 @@ public class CategoryService {
         final var data = categoryRepository.save(category);
         return CommonDataResponse.builder()
                 .result(true)
-                .data(categoryConverter.convert(data))
+                .data(CategoryConverter.convert(data))
                 .build();
     }
 
@@ -86,7 +85,7 @@ public class CategoryService {
         categoryRepository.delete(category);
         return CommonDataResponse.builder()
                 .result(true)
-                .data("Delete success")
+                .data(MessageConstants.CATEGORY_DELETE_SUCCESS)
                 .build();
     }
 

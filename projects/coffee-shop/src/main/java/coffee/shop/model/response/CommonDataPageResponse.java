@@ -8,6 +8,6 @@ public class CommonDataPageResponse {
     private Object data;
     private int totalPages;
     private long totalElements;
-    private int page;
-    private int size;
+    private int pageNumber;
+    private int pageSize;
 }
