@@ -20,6 +20,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static coffee.shop.service.CategoryValidator.*;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -43,16 +45,16 @@ public class CategoryService {
 
     public CommonDataPageResponse getCategories(Integer pageNumber, Integer pageSize) {
         final Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        final Page<Category> categories = categoryRepository.findAll(pageable);
-        final List<CategoryDTO> categoriesResponse = categories.get()
+        final Page<Category> pageCategories = categoryRepository.findAll(pageable);
+        final List<CategoryDTO> categoryDTOs = pageCategories.get()
                 .map(CategoryConverter::convert)
                 .collect(Collectors.toList());
         return CommonDataPageResponse.builder()
-                .data(categoriesResponse)
-                .pageSize(categories.getSize())
-                .pageNumber(categories.getNumber())
-                .totalPages(categories.getTotalPages())
-                .totalElements(categories.getTotalElements())
+                .data(categoryDTOs)
+                .pageSize(pageCategories.getSize())
+                .pageNumber(pageCategories.getNumber())
+                .totalPages(pageCategories.getTotalPages())
+                .totalElements(pageCategories.getTotalElements())
                 .build();
     }
 
@@ -89,10 +91,4 @@ public class CategoryService {
                 .build();
     }
 
-    private static void validateName(String name) {
-        if (name == null || name.isEmpty()) {
-            log.warn(MessageConstants.CATEGORY_NAME_INVALID);
-            throw new IllegalArgumentException(MessageConstants.CATEGORY_NAME_INVALID);
-        }
-    }
 }
