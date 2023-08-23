@@ -11,6 +11,8 @@ spring:
     web:
       pageable:
         one-indexed-parameters: true
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 debug: true
 springdoc:
   default-produces-media-type: application/json
