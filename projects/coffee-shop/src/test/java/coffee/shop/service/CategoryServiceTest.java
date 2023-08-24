@@ -1,7 +1,7 @@
 package coffee.shop.service;
 
 import coffee.shop.constant.MessageConstants;
-import coffee.shop.dto.CategoryDTO;
+import coffee.shop.dto.response.CategoryResponseDto;
 import coffee.shop.entity.Category;
 import coffee.shop.model.exception.NotFoundException;
 import coffee.shop.model.request.CategoryRequest;
@@ -76,7 +76,7 @@ class CategoryServiceTest {
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
         final CommonDataResponse categoryResponse = categoryService.getCategoryDetail(1L);
         assertThat(categoryResponse.isResult()).isTrue();
-        assertThat(categoryResponse.getData()).isNotNull().isEqualTo(CategoryDTO.builder().id(1L).name("Coffee").build());
+        assertThat(categoryResponse.getData()).isNotNull().isEqualTo(CategoryResponseDto.builder().id(1L).name("Coffee").build());
     }
 
     @Test

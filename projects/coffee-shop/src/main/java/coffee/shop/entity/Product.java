@@ -16,10 +16,10 @@ import javax.persistence.Table;
 @Table(name="product")
 @Getter
 @Setter
-public class Product extends BaseEntity{
+public class Product extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "product_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @JoinColumn(name = "category_id", nullable = false)
