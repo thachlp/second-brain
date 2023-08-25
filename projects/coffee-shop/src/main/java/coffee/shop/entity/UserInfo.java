@@ -39,5 +39,5 @@ public class UserInfo extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private Role role;
+    private Role role = Role.CUSTOMER;
 }
