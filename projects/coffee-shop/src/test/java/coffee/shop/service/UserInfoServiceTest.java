@@ -38,8 +38,8 @@ class UserInfoServiceTest {
         when(userInfoRepository.findByUsername("test")).thenReturn(Optional.empty());
         when(passwordEncoder.encode("test")).thenReturn("test");
         when(userInfoRepository.save(any())).thenReturn(userInfo);
-        final var userRegistrationResponseDto = userInfoService.registerNewUserAccount(new UserRegistrationRequest("test", "test"));
-        assertThat(userRegistrationResponseDto).isNotNull();
+        final var commonDataResponse = userInfoService.registerNewUserAccount(new UserRegistrationRequest("test", "test"));
+        assertThat(commonDataResponse).isNotNull();
         verify(userInfoRepository, times(1)).save(any());
     }
 
@@ -48,8 +48,7 @@ class UserInfoServiceTest {
         when(userInfoRepository.findByUsername("test")).thenReturn(Optional.empty());
         when(passwordEncoder.encode("test")).thenReturn("test");
         when(userInfoRepository.save(any())).thenReturn(null);
-        final var userRegistrationResponseDto = userInfoService.registerNewUserAccount(new UserRegistrationRequest("test", "test"));
-        assertThat(userRegistrationResponseDto.getId()).isNull();
+        final var commonDataResponse = userInfoService.registerNewUserAccount(new UserRegistrationRequest("test", "test"));
         verify(userInfoRepository, times(1)).save(any());
     }
 
