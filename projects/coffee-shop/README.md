@@ -1,3 +1,8 @@
+### Setup MySQL using Docker
+```
+docker run --name mysql -e MYSQL_ROOT_PASSWORD=<password> -p 127.0.0.1:3306:3306 -d mysql
+```
+
 ### How to build
 ```bash
 ./gradlew :coffee-shop:build
