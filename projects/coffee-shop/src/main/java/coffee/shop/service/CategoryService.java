@@ -2,7 +2,7 @@ package coffee.shop.service;
 
 import coffee.shop.constant.MessageConstants;
 import coffee.shop.converter.CategoryConverter;
-import coffee.shop.dto.response.CategoryResponseDto;
+import coffee.shop.dto.response.CategoryResponse;
 import coffee.shop.entity.Category;
 import coffee.shop.model.exception.NotFoundException;
 import coffee.shop.model.request.CategoryRequest;
@@ -38,7 +38,6 @@ public class CategoryService {
                 .build();
         final var data = categoryRepository.save(category);
         return CommonDataResponse.builder()
-                .result(true)
                 .data(CategoryConverter.convert(data))
                 .build();
     }
@@ -46,7 +45,7 @@ public class CategoryService {
     public CommonDataPageResponse getCategories(Integer pageNumber, Integer pageSize) {
         final Pageable pageable = PageRequest.of(pageNumber, pageSize);
         final Page<Category> pageCategories = categoryRepository.findAll(pageable);
-        final List<CategoryResponseDto> categoryDTOs = pageCategories.get()
+        final List<CategoryResponse> categoryDTOs = pageCategories.get()
                 .map(CategoryConverter::convert)
                 .collect(Collectors.toList());
         return CommonDataPageResponse.builder()
@@ -62,7 +61,6 @@ public class CategoryService {
         final Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException(MessageConstants.CATEGORY_NOT_FOUND));
         return CommonDataResponse.builder()
-                .result(true)
                 .data(CategoryConverter.convert(category))
                 .build();
     }
@@ -76,7 +74,6 @@ public class CategoryService {
         category.setUpdatedAt(LocalDateTime.now());
         final var data = categoryRepository.save(category);
         return CommonDataResponse.builder()
-                .result(true)
                 .data(CategoryConverter.convert(data))
                 .build();
     }
@@ -86,7 +83,6 @@ public class CategoryService {
                 .orElseThrow(() -> new NotFoundException(MessageConstants.CATEGORY_NOT_FOUND));
         categoryRepository.delete(category);
         return CommonDataResponse.builder()
-                .result(true)
                 .data(MessageConstants.CATEGORY_DELETE_SUCCESS)
                 .build();
     }
