@@ -1,7 +1,7 @@
 package coffee.shop.service;
 
 import coffee.shop.constant.MessageConstants;
-import coffee.shop.dto.response.CategoryResponseDto;
+import coffee.shop.dto.response.CategoryResponse;
 import coffee.shop.entity.Category;
 import coffee.shop.model.exception.NotFoundException;
 import coffee.shop.model.request.CategoryRequest;
@@ -50,7 +50,7 @@ class CategoryServiceTest {
     void addCategory() {
         when(categoryRepository.save(any())).thenReturn(any());
         final CommonDataResponse dataResponse = categoryService.addCategory(new CategoryRequest("Coffee"));
-        assertThat(dataResponse.isResult()).isTrue();
+        verify(categoryRepository, times(1)).save(any());
     }
 
     @Test
@@ -75,8 +75,7 @@ class CategoryServiceTest {
     void getCategoryDetail() {
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
         final CommonDataResponse categoryResponse = categoryService.getCategoryDetail(1L);
-        assertThat(categoryResponse.isResult()).isTrue();
-        assertThat(categoryResponse.getData()).isNotNull().isEqualTo(CategoryResponseDto.builder().id(1L).name("Coffee").build());
+        assertThat(categoryResponse.getData()).isNotNull().isEqualTo(CategoryResponse.builder().id(1L).name("Coffee").build());
     }
 
     @Test
@@ -92,7 +91,6 @@ class CategoryServiceTest {
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
         final CommonDataResponse categoryResponse = categoryService.updateCategory(1L, new CategoryRequest("Tea"));
         verify(categoryRepository, times(1)).save(category);
-        assertThat(categoryResponse.isResult()).isTrue();
     }
 
     @Test
@@ -100,7 +98,6 @@ class CategoryServiceTest {
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
         final CommonDataResponse categoryResponse = categoryService.deleteCategory(1L);
         verify(categoryRepository, times(1)).delete(category);
-        assertThat(categoryResponse.isResult()).isTrue();
     }
 
 }

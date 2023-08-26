@@ -1,7 +1,8 @@
 package coffee.shop.controller.user;
 
-import coffee.shop.dto.request.UserRegistrationRequestDto;
-import coffee.shop.dto.response.UserRegistrationResponseDto;
+import coffee.shop.dto.request.UserRegistrationRequest;
+import coffee.shop.dto.response.UserRegistrationResponse;
+import coffee.shop.model.response.CommonDataResponse;
 import coffee.shop.service.UserInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +18,8 @@ public class UserInfoController {
     private final UserInfoService userInfoService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserRegistrationResponseDto> registerUserAccount(@RequestBody UserRegistrationRequestDto userRegistrationDto) {
-        final UserRegistrationResponseDto registeredUser = userInfoService.registerNewUserAccount(userRegistrationDto);
-        return ResponseEntity.ok(registeredUser);
+    public ResponseEntity<CommonDataResponse> registerUserAccount(@RequestBody UserRegistrationRequest userRegistrationDto) {
+        final CommonDataResponse registeredResponse = userInfoService.registerNewUserAccount(userRegistrationDto);
+        return ResponseEntity.ok(registeredResponse);
     }
 }

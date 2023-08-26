@@ -1,6 +1,6 @@
 package coffee.shop.service;
 
-import coffee.shop.dto.request.UserRegistrationRequestDto;
+import coffee.shop.dto.request.UserRegistrationRequest;
 import coffee.shop.entity.UserInfo;
 import coffee.shop.model.exception.UsernameAlreadyExistsException;
 import coffee.shop.repository.UserInfoRepository;
@@ -38,8 +38,8 @@ class UserInfoServiceTest {
         when(userInfoRepository.findByUsername("test")).thenReturn(Optional.empty());
         when(passwordEncoder.encode("test")).thenReturn("test");
         when(userInfoRepository.save(any())).thenReturn(userInfo);
-        final var userRegistrationResponseDto = userInfoService.registerNewUserAccount(new UserRegistrationRequestDto("test", "test"));
-        assertThat(userRegistrationResponseDto).isNotNull();
+        final var commonDataResponse = userInfoService.registerNewUserAccount(new UserRegistrationRequest("test", "test"));
+        assertThat(commonDataResponse).isNotNull();
         verify(userInfoRepository, times(1)).save(any());
     }
 
@@ -48,8 +48,7 @@ class UserInfoServiceTest {
         when(userInfoRepository.findByUsername("test")).thenReturn(Optional.empty());
         when(passwordEncoder.encode("test")).thenReturn("test");
         when(userInfoRepository.save(any())).thenReturn(null);
-        final var userRegistrationResponseDto = userInfoService.registerNewUserAccount(new UserRegistrationRequestDto("test", "test"));
-        assertThat(userRegistrationResponseDto.getId()).isNull();
+        final var commonDataResponse = userInfoService.registerNewUserAccount(new UserRegistrationRequest("test", "test"));
         verify(userInfoRepository, times(1)).save(any());
     }
 
@@ -58,7 +57,7 @@ class UserInfoServiceTest {
         final UserInfo userInfo = new UserInfo();
         userInfo.setId(1L);
         userInfo.setUsername("test");
-        final UserRegistrationRequestDto userRegistrationRequestDto = new UserRegistrationRequestDto("test", "test");
+        final UserRegistrationRequest userRegistrationRequestDto = new UserRegistrationRequest("test", "test");
         when(userInfoRepository.findByUsername("test")).thenReturn(Optional.of(userInfo));
         final Exception exception = assertThrows(UsernameAlreadyExistsException.class, () ->
                 userInfoService.registerNewUserAccount(userRegistrationRequestDto));

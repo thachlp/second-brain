@@ -1,6 +1,6 @@
 package coffee.shop.converter;
 
-import coffee.shop.dto.response.CategoryResponseDto;
+import coffee.shop.dto.response.CategoryResponse;
 import coffee.shop.entity.Category;
 import lombok.experimental.UtilityClass;
 
@@ -8,12 +8,12 @@ import java.util.Objects;
 
 @UtilityClass
 public class CategoryConverter {
-    public static CategoryResponseDto convert(Category category) {
+    public static CategoryResponse convert(Category category) {
         if (Objects.isNull(category)) {
-            return CategoryResponseDto.builder()
+            return CategoryResponse.builder()
                     .build();
         }
-        return CategoryResponseDto.builder()
+        return CategoryResponse.builder()
                 .id(category.getId())
                 .name(category.getName())
                 .build();
