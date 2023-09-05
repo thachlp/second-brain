@@ -1,4 +1,4 @@
-package coffee.shop.model.request;
+package coffee.shop.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

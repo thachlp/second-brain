@@ -1,4 +1,4 @@
-package coffee.shop.constant;
+package coffee.shop.model.constant;
 
 import lombok.experimental.UtilityClass;
 

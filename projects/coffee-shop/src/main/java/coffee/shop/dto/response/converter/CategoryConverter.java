@@ -1,7 +1,7 @@
-package coffee.shop.converter;
+package coffee.shop.dto.response.converter;
 
 import coffee.shop.dto.response.CategoryResponse;
-import coffee.shop.entity.Category;
+import coffee.shop.model.entity.Category;
 import lombok.experimental.UtilityClass;
 
 import java.util.Objects;

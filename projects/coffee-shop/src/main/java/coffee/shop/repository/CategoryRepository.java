@@ -1,6 +1,6 @@
 package coffee.shop.repository;
 
-import coffee.shop.entity.Category;
+import coffee.shop.model.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

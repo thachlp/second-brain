@@ -1,6 +1,6 @@
 package coffee.shop.configuration;
 
-import coffee.shop.model.exception.NotFoundException;
+import coffee.shop.model.exception.ResourceNotFoundException;
 import coffee.shop.model.exception.UsernameAlreadyExistsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,9 +20,9 @@ public class ControllerAdvice {
         return Map.of("detail", ex.getMessage());
     }
 
-    @ExceptionHandler(NotFoundException.class)
+    @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, Object> handleNotFoundException(NotFoundException ex) {
+    public Map<String, Object> handleNotFoundException(ResourceNotFoundException ex) {
         log.error(ex.getMessage(), ex);
         return Map.of("detail", ex.getMessage() == null ? "" : ex.getMessage());
     }

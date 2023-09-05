@@ -1,6 +1,6 @@
 package coffee.shop.controller.admin;
 
-import coffee.shop.model.request.CategoryRequest;
+import coffee.shop.dto.request.CategoryRequest;
 import coffee.shop.service.CategoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;

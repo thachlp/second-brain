@@ -1,4 +1,4 @@
-package coffee.shop.entity;
+package coffee.shop.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

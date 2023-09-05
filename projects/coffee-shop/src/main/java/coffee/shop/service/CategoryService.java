@@ -1,13 +1,12 @@
 package coffee.shop.service;
 
-import coffee.shop.constant.MessageConstants;
-import coffee.shop.converter.CategoryConverter;
+import coffee.shop.model.constant.MessageConstants;
+import coffee.shop.dto.response.converter.CategoryConverter;
 import coffee.shop.dto.response.CategoryResponse;
-import coffee.shop.entity.Category;
-import coffee.shop.model.exception.NotFoundException;
-import coffee.shop.model.request.CategoryRequest;
-import coffee.shop.model.response.CommonDataPageResponse;
-import coffee.shop.model.response.CommonDataResponse;
+import coffee.shop.model.entity.Category;
+import coffee.shop.model.exception.ResourceNotFoundException;
+import coffee.shop.dto.request.CategoryRequest;
+import coffee.shop.dto.response.PageResponse;
 import coffee.shop.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +27,7 @@ import static coffee.shop.service.CategoryValidator.*;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    public CommonDataResponse addCategory(CategoryRequest categoryRequest) {
+    public CategoryResponse addCategory(CategoryRequest categoryRequest) {
         final var name = categoryRequest.getName();
         validateName(name);
         final var category = Category.builder()
@@ -37,19 +36,17 @@ public class CategoryService {
                 .updatedAt(LocalDateTime.now())
                 .build();
         final var data = categoryRepository.save(category);
-        return CommonDataResponse.builder()
-                .data(CategoryConverter.convert(data))
-                .build();
+        return CategoryConverter.convert(data);
     }
 
-    public CommonDataPageResponse getCategories(Integer pageNumber, Integer pageSize) {
+    public PageResponse<CategoryResponse> getCategories(Integer pageNumber, Integer pageSize) {
         final Pageable pageable = PageRequest.of(pageNumber, pageSize);
         final Page<Category> pageCategories = categoryRepository.findAll(pageable);
-        final List<CategoryResponse> categoryDTOs = pageCategories.get()
+        final List<CategoryResponse> categoryResponses = pageCategories.get()
                 .map(CategoryConverter::convert)
                 .collect(Collectors.toList());
-        return CommonDataPageResponse.builder()
-                .data(categoryDTOs)
+        return PageResponse.<CategoryResponse>builder()
+                .data(categoryResponses)
                 .pageSize(pageCategories.getSize())
                 .pageNumber(pageCategories.getNumber())
                 .totalPages(pageCategories.getTotalPages())
@@ -57,34 +54,27 @@ public class CategoryService {
                 .build();
     }
 
-    public CommonDataResponse getCategoryDetail(Long categoryId) {
+    public CategoryResponse getCategoryDetail(Long categoryId) {
         final Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new NotFoundException(MessageConstants.CATEGORY_NOT_FOUND));
-        return CommonDataResponse.builder()
-                .data(CategoryConverter.convert(category))
-                .build();
+                .orElseThrow(() -> new ResourceNotFoundException(MessageConstants.CATEGORY_NOT_FOUND));
+        return CategoryConverter.convert(category);
     }
 
-    public CommonDataResponse updateCategory(Long categoryId, CategoryRequest categoryRequest) {
+    public CategoryResponse updateCategory(Long categoryId, CategoryRequest categoryRequest) {
         final var name = categoryRequest.getName();
         validateName(name);
         final Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new NotFoundException(MessageConstants.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(MessageConstants.CATEGORY_NOT_FOUND));
         category.setName(name);
         category.setUpdatedAt(LocalDateTime.now());
         final var data = categoryRepository.save(category);
-        return CommonDataResponse.builder()
-                .data(CategoryConverter.convert(data))
-                .build();
+        return CategoryConverter.convert(data);
     }
 
-    public CommonDataResponse deleteCategory(Long categoryId) {
+    public void deleteCategory(Long categoryId) {
         final Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new NotFoundException(MessageConstants.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(MessageConstants.CATEGORY_NOT_FOUND));
         categoryRepository.delete(category);
-        return CommonDataResponse.builder()
-                .data(MessageConstants.CATEGORY_DELETE_SUCCESS)
-                .build();
     }
 
 }

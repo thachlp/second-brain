@@ -1,6 +1,6 @@
 package coffee.shop.controller.user;
 
-import coffee.shop.dto.request.UserRegistrationRequest;
+import coffee.shop.dto.request.UserRegisterRequest;
 import coffee.shop.dto.request.UserUpdateRequest;
 import coffee.shop.service.UserInfoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,7 +30,7 @@ class UserInfoControllerTest {
         mockMvc.perform(
                         MockMvcRequestBuilders.post("/user/register")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(new UserRegistrationRequest("test", "test")))
+                                .content(objectMapper.writeValueAsString(new UserRegisterRequest("test", "test")))
                 )
                 .andExpect(status().is(200));
     }

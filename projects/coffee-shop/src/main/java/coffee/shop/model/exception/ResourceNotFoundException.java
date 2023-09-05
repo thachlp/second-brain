@@ -1,9 +1,9 @@
 package coffee.shop.model.exception;
 
-public class NotFoundException extends RuntimeException {
+public class ResourceNotFoundException extends RuntimeException {
     private static final long serialVersionUID = -1124744436047637162L;
 
-    public NotFoundException(String message) {
+    public ResourceNotFoundException(String message) {
         super(message);
     }
 }

@@ -1,4 +1,4 @@
-package coffee.shop.entity;
+package coffee.shop.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
