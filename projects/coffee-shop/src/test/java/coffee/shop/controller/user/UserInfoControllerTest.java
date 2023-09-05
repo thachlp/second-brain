@@ -1,6 +1,7 @@
 package coffee.shop.controller.user;
 
 import coffee.shop.dto.request.UserRegistrationRequest;
+import coffee.shop.dto.request.UserUpdateRequest;
 import coffee.shop.service.UserInfoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -25,11 +26,22 @@ class UserInfoControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void register() throws Exception {
+    void registerUserAccount() throws Exception {
         mockMvc.perform(
                         MockMvcRequestBuilders.post("/user/register")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(new UserRegistrationRequest("test", "test")))
+                )
+                .andExpect(status().is(200));
+    }
+
+    @Test
+    void updateUserInfo() throws Exception {
+        mockMvc.perform(
+                        MockMvcRequestBuilders.put("/user/update")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(new UserUpdateRequest("test", "test@gmail.com",
+                                        "84123456052", "Alex", "HCM City")))
                 )
                 .andExpect(status().is(200));
     }
