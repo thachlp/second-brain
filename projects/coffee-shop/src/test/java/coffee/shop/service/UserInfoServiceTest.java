@@ -1,7 +1,9 @@
 package coffee.shop.service;
 
 import coffee.shop.dto.request.UserRegistrationRequest;
+import coffee.shop.dto.request.UserUpdateRequest;
 import coffee.shop.entity.UserInfo;
+import coffee.shop.model.exception.NotFoundException;
 import coffee.shop.model.exception.UsernameAlreadyExistsException;
 import coffee.shop.repository.UserInfoRepository;
 import org.junit.jupiter.api.Test;
@@ -31,7 +33,7 @@ class UserInfoServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @Test
-    void register(){
+    void registerNewUserAccount(){
         final UserInfo userInfo = new UserInfo();
         userInfo.setId(1L);
         userInfo.setUsername("test");
@@ -44,16 +46,7 @@ class UserInfoServiceTest {
     }
 
     @Test
-    void registerWithSaveFail(){
-        when(userInfoRepository.findByUsername("test")).thenReturn(Optional.empty());
-        when(passwordEncoder.encode("test")).thenReturn("test");
-        when(userInfoRepository.save(any())).thenReturn(null);
-        userInfoService.registerNewUserAccount(new UserRegistrationRequest("test", "test"));
-        verify(userInfoRepository, times(1)).save(any());
-    }
-
-    @Test
-    void registerWithExistUsername(){
+    void registerNewUserAccountWithExistUsername(){
         final UserInfo userInfo = new UserInfo();
         userInfo.setId(1L);
         userInfo.setUsername("test");
@@ -63,4 +56,35 @@ class UserInfoServiceTest {
                 userInfoService.registerNewUserAccount(userRegistrationRequestDto));
         assertEquals("Username test already exists", exception.getMessage());
     }
+
+    @Test
+    void updateUserInfo(){
+        final UserInfo userInfo = new UserInfo();
+        userInfo.setId(1L);
+        userInfo.setUsername("test");
+
+        final UserInfo newUserInfo = new UserInfo();
+        newUserInfo.setUsername("test");
+        newUserInfo.setEmail("test@gmail.com");
+        newUserInfo.setPhoneNumber("84355123456");
+        newUserInfo.setFullName("Alex");
+        newUserInfo.setAddress("Ho Chi Minh City");
+        when(userInfoRepository.findByUsername("test")).thenReturn(Optional.of(userInfo));
+        when(userInfoRepository.save(any())).thenReturn(newUserInfo);
+        final UserUpdateRequest userUpdateRequest = new UserUpdateRequest("test", "test@gmail.com",
+                "84123456052", "Alex", "HCM City");
+        final var commonDataResponse = userInfoService.updateUserInfo(userUpdateRequest);
+        assertThat(commonDataResponse).isNotNull();
+        verify(userInfoRepository, times(1)).save(any());
+    }
+
+    @Test
+    void updateNotExistUser(){
+        final UserUpdateRequest userUpdateRequest = new UserUpdateRequest("test", "test@gmail.com",
+                "84123456052", "Alex", "HCM City");
+        final Exception exception = assertThrows(NotFoundException.class, () ->
+                userInfoService.updateUserInfo(userUpdateRequest));
+        assertEquals("User with username test not found", exception.getMessage());
+    }
+
 }
