@@ -4,33 +4,28 @@ import coffee.shop.model.exception.ResourceNotFoundException;
 import coffee.shop.model.exception.UsernameAlreadyExistsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.Map;
 
 @RestControllerAdvice
 @Slf4j
 public class ControllerAdvice {
-    @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+    @ExceptionHandler({IllegalArgumentException.class, UsernameAlreadyExistsException.class})
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
         log.error(ex.getMessage(), ex);
-        return Map.of("detail", ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, Object> handleNotFoundException(ResourceNotFoundException ex) {
+    public ResponseEntity<String> handleNotFoundException(ResourceNotFoundException ex) {
         log.error(ex.getMessage(), ex);
-        return Map.of("detail", ex.getMessage() == null ? "" : ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(UsernameAlreadyExistsException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, Object> handleUsernameAlreadyExistException(UsernameAlreadyExistsException ex) {
-        log.error(ex.getMessage(), ex);
-        return Map.of("detail", ex.getMessage());
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleAnyException(Exception e) {
+        log.error(e.getMessage(), e);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

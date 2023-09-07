@@ -56,7 +56,7 @@ public class CategoryService {
 
     public CategoryResponse getCategoryDetail(Long categoryId) {
         final Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException(MessageConstants.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(MessageConstants.CATEGORY_NOT_FOUND, categoryId)));
         return CategoryConverter.convert(category);
     }
 
@@ -64,7 +64,7 @@ public class CategoryService {
         final var name = categoryRequest.getName();
         validateName(name);
         final Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException(MessageConstants.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(MessageConstants.CATEGORY_NOT_FOUND, categoryId)));
         category.setName(name);
         category.setUpdatedAt(LocalDateTime.now());
         final var data = categoryRepository.save(category);
@@ -73,7 +73,7 @@ public class CategoryService {
 
     public void deleteCategory(Long categoryId) {
         final Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException(MessageConstants.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(MessageConstants.CATEGORY_NOT_FOUND, categoryId)));
         categoryRepository.delete(category);
     }
 

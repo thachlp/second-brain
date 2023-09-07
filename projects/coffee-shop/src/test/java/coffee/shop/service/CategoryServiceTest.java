@@ -82,7 +82,7 @@ class CategoryServiceTest {
         when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
         final Exception exception = assertThrows(ResourceNotFoundException.class, () ->
                 categoryService.getCategoryDetail(1L));
-        assertEquals(MessageConstants.CATEGORY_NOT_FOUND, exception.getMessage());
+        assertEquals(String.format(MessageConstants.CATEGORY_NOT_FOUND, 1), exception.getMessage());
     }
 
     @Test
