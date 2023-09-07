@@ -11,16 +11,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 @Slf4j
 public class ControllerAdvice {
-    @ExceptionHandler({IllegalArgumentException.class, UsernameAlreadyExistsException.class})
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
+    @ExceptionHandler({IllegalArgumentException.class, UsernameAlreadyExistsException.class,
+                       ResourceNotFoundException.class})
+    public ResponseEntity<String> handleIllegalArgumentException(Exception ex) {
         log.error(ex.getMessage(), ex);
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleNotFoundException(ResourceNotFoundException ex) {
-        log.error(ex.getMessage(), ex);
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)
