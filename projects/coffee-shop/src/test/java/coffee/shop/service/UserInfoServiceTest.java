@@ -1,9 +1,9 @@
 package coffee.shop.service;
 
-import coffee.shop.dto.request.UserRegistrationRequest;
+import coffee.shop.dto.request.UserRegisterRequest;
 import coffee.shop.dto.request.UserUpdateRequest;
-import coffee.shop.entity.UserInfo;
-import coffee.shop.model.exception.NotFoundException;
+import coffee.shop.model.entity.UserInfo;
+import coffee.shop.model.exception.ResourceNotFoundException;
 import coffee.shop.model.exception.UsernameAlreadyExistsException;
 import coffee.shop.repository.UserInfoRepository;
 import org.junit.jupiter.api.Test;
@@ -40,7 +40,7 @@ class UserInfoServiceTest {
         when(userInfoRepository.findByUsername("test")).thenReturn(Optional.empty());
         when(passwordEncoder.encode("test")).thenReturn("test");
         when(userInfoRepository.save(any())).thenReturn(userInfo);
-        final var commonDataResponse = userInfoService.registerNewUserAccount(new UserRegistrationRequest("test", "test"));
+        final var commonDataResponse = userInfoService.registerNewUserAccount(new UserRegisterRequest("test", "test"));
         assertThat(commonDataResponse).isNotNull();
         verify(userInfoRepository, times(1)).save(any());
     }
@@ -50,10 +50,10 @@ class UserInfoServiceTest {
         final UserInfo userInfo = new UserInfo();
         userInfo.setId(1L);
         userInfo.setUsername("test");
-        final UserRegistrationRequest userRegistrationRequestDto = new UserRegistrationRequest("test", "test");
+        final UserRegisterRequest userRegistrationRequest = new UserRegisterRequest("test", "test");
         when(userInfoRepository.findByUsername("test")).thenReturn(Optional.of(userInfo));
         final Exception exception = assertThrows(UsernameAlreadyExistsException.class, () ->
-                userInfoService.registerNewUserAccount(userRegistrationRequestDto));
+                userInfoService.registerNewUserAccount(userRegistrationRequest));
         assertEquals("Username test already exists", exception.getMessage());
     }
 
@@ -82,7 +82,7 @@ class UserInfoServiceTest {
     void updateNotExistUser(){
         final UserUpdateRequest userUpdateRequest = new UserUpdateRequest("test", "test@gmail.com",
                 "84123456052", "Alex", "HCM City");
-        final Exception exception = assertThrows(NotFoundException.class, () ->
+        final Exception exception = assertThrows(ResourceNotFoundException.class, () ->
                 userInfoService.updateUserInfo(userUpdateRequest));
         assertEquals("User with username test not found", exception.getMessage());
     }

@@ -1,7 +1,7 @@
 package coffee.shop.controller.admin;
 
-import coffee.shop.model.request.CategoryRequest;
-import coffee.shop.model.response.CommonDataResponse;
+import coffee.shop.dto.request.CategoryRequest;
+import coffee.shop.dto.response.CategoryResponse;
 import coffee.shop.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,21 +24,21 @@ public class AdminCategoryController {
 
     @Operation(summary = "Add a new category")
     @PostMapping
-    ResponseEntity<CommonDataResponse> newCategory(@RequestBody CategoryRequest categoryRequest) {
+    ResponseEntity<CategoryResponse> newCategory(@RequestBody CategoryRequest categoryRequest) {
         return new ResponseEntity<>(categoryService.addCategory(categoryRequest),
                 HttpStatus.CREATED);
     }
 
     @Operation(summary = "Update a category")
     @PutMapping("/{id}")
-    ResponseEntity<CommonDataResponse> updateCategory(@PathVariable("id") Long categoryId,
-                                                      @RequestBody CategoryRequest categoryRequest) {
+    ResponseEntity<CategoryResponse> updateCategory(@PathVariable("id") Long categoryId,
+                                                    @RequestBody CategoryRequest categoryRequest) {
         return ResponseEntity.ok(categoryService.updateCategory(categoryId, categoryRequest));
     }
 
     @Operation(summary = "Delete a category")
     @DeleteMapping("/{id}")
-    ResponseEntity<CommonDataResponse> deleteCategory(@PathVariable("id") Long categoryId) {
-        return ResponseEntity.ok(categoryService.deleteCategory(categoryId));
+    void deleteCategory(@PathVariable("id") Long categoryId) {
+        categoryService.deleteCategory(categoryId);
     }
 }

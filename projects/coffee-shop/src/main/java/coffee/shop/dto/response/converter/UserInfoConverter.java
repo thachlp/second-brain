@@ -1,11 +1,9 @@
-package coffee.shop.converter;
+package coffee.shop.dto.response.converter;
 
 import coffee.shop.dto.response.UserRegisterResponse;
 import coffee.shop.dto.response.UserUpdateResponse;
-import coffee.shop.entity.UserInfo;
+import coffee.shop.model.entity.UserInfo;
 import lombok.experimental.UtilityClass;
-
-import java.util.Objects;
 
 @UtilityClass
 public class UserInfoConverter {

@@ -1,12 +1,13 @@
 package coffee.shop.service;
 
-import coffee.shop.converter.UserInfoConverter;
-import coffee.shop.dto.request.UserRegistrationRequest;
+import coffee.shop.dto.response.converter.UserInfoConverter;
+import coffee.shop.dto.request.UserRegisterRequest;
 import coffee.shop.dto.request.UserUpdateRequest;
-import coffee.shop.entity.UserInfo;
-import coffee.shop.model.exception.NotFoundException;
+import coffee.shop.dto.response.UserRegisterResponse;
+import coffee.shop.dto.response.UserUpdateResponse;
+import coffee.shop.model.entity.UserInfo;
+import coffee.shop.model.exception.ResourceNotFoundException;
 import coffee.shop.model.exception.UsernameAlreadyExistsException;
-import coffee.shop.model.response.CommonDataResponse;
 import coffee.shop.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,7 +20,7 @@ import java.util.Optional;
 public class UserInfoService {
     private final UserInfoRepository userInfoRepository;
     private final PasswordEncoder passwordEncoder;
-    public CommonDataResponse registerNewUserAccount(UserRegistrationRequest userRegistrationRequest) {
+    public UserRegisterResponse registerNewUserAccount(UserRegisterRequest userRegistrationRequest) {
         final String username = userRegistrationRequest.getUsername();
         if(userInfoRepository.findByUsername(username).isPresent()) {
             throw new UsernameAlreadyExistsException("Username " + username + " already exists");
@@ -28,23 +29,19 @@ public class UserInfoService {
         final UserInfo userInfo = new UserInfo();
         userInfo.setUsername(username);
         userInfo.setPassword(passwordEncoder.encode(userRegistrationRequest.getPassword()));
-        return CommonDataResponse.builder()
-                .data(UserInfoConverter.convertRegisterUser(userInfoRepository.save(userInfo)))
-                .build();
+        return UserInfoConverter.convertRegisterUser(userInfoRepository.save(userInfo));
     }
 
-    public CommonDataResponse updateUserInfo(UserUpdateRequest userUpdateRequest) {
+    public UserUpdateResponse updateUserInfo(UserUpdateRequest userUpdateRequest) {
         final Optional<UserInfo> optionalUserInfo = userInfoRepository.findByUsername(userUpdateRequest.getUsername());
         if(optionalUserInfo.isEmpty()) {
-            throw new NotFoundException("User with username " + userUpdateRequest.getUsername() + " not found");
+            throw new ResourceNotFoundException("User with username " + userUpdateRequest.getUsername() + " not found");
         }
         final UserInfo userInfo = optionalUserInfo.get();
         userInfo.setEmail(userUpdateRequest.getEmail());
         userInfo.setFullName(userUpdateRequest.getFullName());
         userInfo.setPhoneNumber(userUpdateRequest.getPhoneNumber());
         userInfo.setAddress(userUpdateRequest.getAddress());
-        return CommonDataResponse.builder()
-                .data(UserInfoConverter.convertUpdateUser(userInfoRepository.save(userInfo)))
-                .build();
+        return UserInfoConverter.convertUpdateUser(userInfoRepository.save(userInfo));
     }
 }

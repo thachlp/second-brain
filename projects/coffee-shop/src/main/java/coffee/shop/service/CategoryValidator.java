@@ -1,6 +1,6 @@
 package coffee.shop.service;
 
-import coffee.shop.constant.MessageConstants;
+import coffee.shop.model.constant.MessageConstants;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 

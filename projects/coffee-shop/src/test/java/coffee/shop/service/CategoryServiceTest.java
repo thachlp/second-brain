@@ -1,12 +1,11 @@
 package coffee.shop.service;
 
-import coffee.shop.constant.MessageConstants;
+import coffee.shop.model.constant.MessageConstants;
 import coffee.shop.dto.response.CategoryResponse;
-import coffee.shop.entity.Category;
-import coffee.shop.model.exception.NotFoundException;
-import coffee.shop.model.request.CategoryRequest;
-import coffee.shop.model.response.CommonDataPageResponse;
-import coffee.shop.model.response.CommonDataResponse;
+import coffee.shop.model.entity.Category;
+import coffee.shop.model.exception.ResourceNotFoundException;
+import coffee.shop.dto.request.CategoryRequest;
+import coffee.shop.dto.response.PageResponse;
 import coffee.shop.repository.CategoryRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -49,7 +48,7 @@ class CategoryServiceTest {
     @Test
     void addCategory() {
         when(categoryRepository.save(any())).thenReturn(any());
-        final CommonDataResponse dataResponse = categoryService.addCategory(new CategoryRequest("Coffee"));
+        categoryService.addCategory(new CategoryRequest("Coffee"));
         verify(categoryRepository, times(1)).save(any());
     }
 
@@ -67,36 +66,36 @@ class CategoryServiceTest {
         final Pageable pageable = PageRequest.of(0, 10);
         final Page<Category> pageCategories = new PageImpl<>(categories, pageable, 1);
         when(categoryRepository.findAll(PageRequest.of(0, 10))).thenReturn(pageCategories);
-        final CommonDataPageResponse dataResponse = categoryService.getCategories(0, 10);
+        final PageResponse dataResponse = categoryService.getCategories(0, 10);
         assertThat(dataResponse.getTotalElements()).isOne();
     }
 
     @Test
     void getCategoryDetail() {
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
-        final CommonDataResponse categoryResponse = categoryService.getCategoryDetail(1L);
-        assertThat(categoryResponse.getData()).isNotNull().isEqualTo(CategoryResponse.builder().id(1L).name("Coffee").build());
+        final CategoryResponse categoryResponse = categoryService.getCategoryDetail(1L);
+        assertThat(categoryResponse).isNotNull().isEqualTo(CategoryResponse.builder().id(1L).name("Coffee").build());
     }
 
     @Test
     void getCategoryDetailNotFound() {
         when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
-        final Exception exception = assertThrows(NotFoundException.class, () ->
+        final Exception exception = assertThrows(ResourceNotFoundException.class, () ->
                 categoryService.getCategoryDetail(1L));
-        assertEquals(MessageConstants.CATEGORY_NOT_FOUND, exception.getMessage());
+        assertEquals(String.format(MessageConstants.CATEGORY_NOT_FOUND, 1), exception.getMessage());
     }
 
     @Test
     void updateCategory() {
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
-        final CommonDataResponse categoryResponse = categoryService.updateCategory(1L, new CategoryRequest("Tea"));
+        categoryService.updateCategory(1L, new CategoryRequest("Tea"));
         verify(categoryRepository, times(1)).save(category);
     }
 
     @Test
     void deleteCategory() {
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
-        final CommonDataResponse categoryResponse = categoryService.deleteCategory(1L);
+        categoryService.deleteCategory(1L);
         verify(categoryRepository, times(1)).delete(category);
     }
 
