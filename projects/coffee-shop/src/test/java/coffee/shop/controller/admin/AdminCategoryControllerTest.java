@@ -1,6 +1,7 @@
 package coffee.shop.controller.admin;
 
 import coffee.shop.dto.request.CategoryRequest;
+import coffee.shop.model.exception.ResourceNotFoundException;
 import coffee.shop.service.CategoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AdminCategoryController.class)
@@ -37,6 +39,18 @@ class AdminCategoryControllerTest {
     }
 
     @Test
+    void createCategoryInvalid() throws Exception {
+        when(categoryService.addCategory(new CategoryRequest(""))).thenThrow(new ResourceNotFoundException("Category name is invalid"));
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post("/admin/categories")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(new CategoryRequest("")))
+                )
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().string("Category name is invalid"));
+    }
+
+    @Test
     void updateCategory() throws Exception {
         mockMvc.perform(
                         MockMvcRequestBuilders.put("/admin/categories/1")
@@ -52,5 +66,15 @@ class AdminCategoryControllerTest {
                         MockMvcRequestBuilders.delete("/admin/categories/1")
                 )
                 .andExpect(status().is(200));
+    }
+
+    @Test
+    void deleteCategoryFail() throws Exception {
+        doThrow(new RuntimeException("Internal error")).when(categoryService).deleteCategory(1L);
+        mockMvc.perform(
+                        MockMvcRequestBuilders.delete("/admin/categories/1")
+                )
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("Internal error"));
     }
 }
