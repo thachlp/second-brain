@@ -23,7 +23,7 @@ jobs:
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2
     - name: Gradle build
-      working-directory: projects
+      working-directory: coffee-shop
       run: ./gradlew build -Pcoverage
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
