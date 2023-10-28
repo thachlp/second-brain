@@ -1,0 +1,2 @@
+rootProject.name = 'coffee-shop'
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
