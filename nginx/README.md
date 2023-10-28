@@ -33,3 +33,23 @@ location /images/ {
 }
 ```
 - When a client makes a request to http://localhost:8080/images/image.jpg, Nginx will serve the image.jpg file located in the `/data/www/images` directory.
+
+#### Reverse proxy
+Is a server that sits front of backend servers and forwards client requests to those backend servers .
+
+Nginx can be used as a reverse proxy.
+```text
+server {
+    listen 8080;
+    server_name example.com;
+
+    location /app/ {
+        proxy_pass http://localhost:8081;
+    }
+
+		location /admin/ {
+        proxy_pass http://localhost:8082;
+    }
+}
+```
+- I have two services admin and app running on port 8081 and 8082. I can use Nginx as a proxy to serve two services.
