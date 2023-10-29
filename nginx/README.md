@@ -53,3 +53,25 @@ server {
 }
 ```
 - I have two services admin and app running on port 8081 and 8082. I can use Nginx as a proxy to serve two services.
+#### HTTP Load Balancer
+Load balancing across multiple application instances is a commonly used technique for optimizing resource utilization, maximizing throughput, reducing latency, and ensuring fault-tolerant configurations.
+```text
+http {
+    upstream myapp1 {
+        server srv1.example.com;
+        server srv2.example.com;
+        server srv3.example.com;
+    }
+
+    server {
+        listen 80;
+
+        location / {
+            proxy_pass http://myapp1;
+        }
+    }
+}
+```
+- Client requests are [proxied](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_pass) to the server group `myapp1`, and nginx applies HTTP load balancing to distribute the requests.
+- When the load balancing method is not specifically configured, it defaults to ***round-robin***
+- There are other balancing methods: ***least-connected, ip-hash, weighted***.
